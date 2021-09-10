@@ -12,6 +12,10 @@
             // OS判定用の変数
             let os;
 
+            // XMLHttpRequest
+            const xhr = new XMLHttpRequest();
+            const api_key = ''
+
             // DOMの構築完了チェック用のイベントハンドラ
             window.addEventListener("DOMContentLoaded", init);
 
@@ -61,6 +65,15 @@
                 document.querySelector("#motion_x").innerHTML = x;
                 document.querySelector("#motion_y").innerHTML = y;
                 document.querySelector("#motion_z").innerHTML = z;
+
+                document.querySelector("#send_data").addEventListener("click", (e) => {
+                    e.preventDefault();
+
+                    // GET
+                    var get_url = "https://api.thingspeak.com/update?api_key=" + api_key + "&field1=" + x + "&field2=" + y + "&field3=" + z;
+                    xhr.open('GET', get_url);
+                    xhr.send();
+                });
             }
 
             // ジャイロスコープと地磁気をセンサーから取得
@@ -139,6 +152,7 @@
                 } else if (Vx < 0) {
                     compassHeading += 2 * Math.PI;
                 }
+            }
 
         </script>
     </head>
@@ -161,5 +175,10 @@
             iOSの場合、ユーザの許可が必要なため、下記ボタンをタップ
         </p>
             <input type="button" id="permit" value="SafariでDeviceOrientationを許可"/>
+        <h2>データの登録</h2>
+        <p>
+            ボタンをタップしたときの加速度データをThingSpeakに登録
+        </p>
+            <input type="button" id="send_data" value="ThingSpeakに加速度を登録"/>
     </body>
 </html>
