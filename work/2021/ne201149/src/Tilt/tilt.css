@@ -1,0 +1,29 @@
+body {
+  background-color: rgb(241, 196, 255);
+  font-family: "TsukuARdGothic-Regular", sans-serif;
+}
+h1 {
+  font-weight: bold;
+  font-size: 150%;
+}
+h2 {
+  font-size: 80%;
+}
+.start {
+  font-size: 300%;
+  border: white 5px solid;
+  border-radius: 20px;
+  background-color: rgb(241, 196, 255);
+  color: white;
+}
+.start:active {
+  font-size: 300%;
+  border: white 5px solid;
+  border-radius: 20px;
+  background-color: rgb(241, 196, 255);
+  color: white;
+  text-shadow: 1px 2px 3px black;
+}
+p {
+  font-size: 80%;
+}
