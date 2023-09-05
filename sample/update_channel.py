@@ -6,8 +6,8 @@ import sys
 import requests
 
 api_key = ''
-channle_id = '1499081'
-data_file = "./data/cpu_temp.dat"
+channle_id = ''
+data_file = "./data/cpu_thermal.dat"
 
 _ts_base_url = "https://api.thingspeak.com"
 ts_update_url = _ts_base_url + "/update"
@@ -36,9 +36,13 @@ def getCpuTempFromFile(filename):
     # ファイルを開いてデータを取得
     with open(filename) as f:
         _lines = f.readlines()
-        for _line in _lines:
-            _data = _line.split()
-            _cpu_temps.append(_data[5])
+        for _line in _lines: # 配列を1行ずつ取り出す
+            _data = _line.split() # ファイルの1行を空白で区切って配列にする
+            print(_data) # 1行の中身を確認
+            # ここで、1行のデータのどの部分をどう使うか考えて処理する
+            if _data[5] == 'Normal' :
+                _data[5] = 100
+            _cpu_temps.append(_data[5]) # 区切った5つ目を結果用の配列に追記する
     
     return _cpu_temps
 
