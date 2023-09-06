@@ -1,0 +1,35 @@
+root = "/api"
+tmp_dir = "./cmd/tmp"
+
+[build]
+  args_bin = []
+  bin = "./tmp/main"
+  cmd = "go build -o ./tmp/main ."
+  send_interrupt = false
+  stop_on_error = true
+  delay = "1500"
+  kill_dalay = "0"
+  poll = false
+  poll_interval = 0
+  rerun = false
+  rerun_delay = 500
+  full_bin = ""
+  include_file = ["go", "yaml", "json"]
+  exclude_file = ["log"]
+  follow_symlink = true
+
+[color]
+  app = ""
+  build = "yellow"
+  main = "mageneta"
+  runner = "green"
+  watcher = "cyan"
+
+[log]
+  time = true
+
+[misc]
+  clean_on_exit = false
+
+[screen]
+  clear_on_rebuild = false
