@@ -5,6 +5,7 @@ import os
 import sys
 import requests #httpリクエストを行うためのモジュール
 import re #正規表現を使うためのモジュールをインポート
+import time
 
 api_key = 'V4S9V18KFNIR8QDI' # 作成したチャンネルのAPIキー
 channle_id = '2261964' # 作成したチャンネルのID
@@ -57,7 +58,7 @@ def post2ThingSpeak(req_url, headers, post_data):
         response = requests.post(req_url, headers=headers, data=post_data)
         if response.text != '0':
             break
-        time.sleep(1)
+       # time.sleep(1)
 
 
 # メイン処理
@@ -73,8 +74,9 @@ print(cpu_temps)
 
 # 最新のデータ（一番最後）をThingSpeakに登録
 # 登録するデータを設定
-post_data = {'field1': cpu_temps[-1]}
-post2ThingSpeak(ts_update_url, headers, post_data)
 
-print("CPU温度：" + str(cpu_temps[-1]) + " を登録しました。")
+for i in range(len(cpu_temps)):
+    post_data = {'field1': cpu_temps[i]}
+    post2ThingSpeak(ts_update_url, headers, post_data)
+    print("CPU温度：" + str(cpu_temps[i]) + " を登録しました。")
 sys.exit(0)
