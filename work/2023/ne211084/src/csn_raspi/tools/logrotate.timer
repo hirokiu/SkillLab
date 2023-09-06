@@ -1,0 +1,11 @@
+[Unit]
+Description=Hourly rotation of log files (for csn logs)
+Documentation=man:logrotate(8) man:logrotate.conf(5)
+
+[Timer]
+OnCalendar = *-*-* *:10:*
+AccuracySec=60s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
