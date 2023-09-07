@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/funobu/zunavi/internal/domains"
 	"github.com/funobu/zunavi/internal/interfaces/access"
+	"github.com/glassonion1/logz"
 	"github.com/redis/go-redis/v9"
 	"log"
 	"sync"
@@ -15,15 +16,16 @@ type MessageSender interface {
 }
 
 type messageSender struct {
-	voiceService access.VoiceService
+	aiChatService access.AIChatService
+	voiceService  access.VoiceService
 	// TODO: 後でインタフェース定義する
 	pubsub  *redis.Client
 	clients map[string]*domains.Client
 	mutex   sync.Mutex
 }
 
-func NewMessageSender(voiceService access.VoiceService, pubsub *redis.Client, clients map[string]*domains.Client) MessageSender {
-	return &messageSender{voiceService: voiceService, clients: clients, pubsub: pubsub, mutex: sync.Mutex{}}
+func NewMessageSender(voiceService access.VoiceService, aiChatService access.AIChatService, pubsub *redis.Client, clients map[string]*domains.Client) MessageSender {
+	return &messageSender{voiceService: voiceService, aiChatService: aiChatService, clients: clients, pubsub: pubsub, mutex: sync.Mutex{}}
 }
 
 func (s *messageSender) SendReceivedMessageWorker(ctx context.Context, subID string) {
@@ -37,8 +39,16 @@ func (s *messageSender) SendReceivedMessageWorker(ctx context.Context, subID str
 			log.Println(err)
 			continue
 		}
+		logz.Debugf(ctx, "received message: %v", newMessage.Text)
 
-		voice, err := s.voiceService.GenerateVoice(ctx, 1, newMessage.Text)
+		resp, err := s.aiChatService.Ask(ctx, newMessage.Text)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		logz.Debugf(ctx, "openai response: %v", resp)
+
+		voice, err := s.voiceService.GenerateVoice(ctx, 1, resp)
 		if err != nil {
 			log.Println(err)
 			continue

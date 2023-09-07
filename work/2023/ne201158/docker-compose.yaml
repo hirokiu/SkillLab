@@ -5,13 +5,13 @@ services:
     container_name: zunavi_sender
     build:
       context: .
-      dockerfile: ./backend/Dockerfile
+      dockerfile: ./backend/cmd/sender/Dockerfile
       target: local
     environment:
       SENDER_API_PORT: ${SENDER_API_PORT}
       STAGE: ${STAGE}
-      API_PORT: ${API_PORT}
       PUBSUB_ADDR: ${PUBSUB_ADDR}
+      VOICER_ADDR: ${VOICER_ADDR}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
     volumes:
       - ./backend:/backend
@@ -19,6 +19,22 @@ services:
     tty: true
     ports:
       - "${SENDER_API_PORT}:${SENDER_API_PORT}"
+  receiver:
+    container_name: zunavi_receiver
+    build:
+      context: .
+      dockerfile: ./backend/cmd/receiver/Dockerfile
+      target: local
+    environment:
+      RECEIVER_API_PORT: ${RECEIVER_API_PORT}
+      STAGE: ${STAGE}
+      PUBSUB_ADDR: ${PUBSUB_ADDR}
+    volumes:
+      - ./backend:/backend
+    restart: always
+    tty: true
+    ports:
+      - "${RECEIVER_API_PORT}:${RECEIVER_API_PORT}"
   voicer:
     container_name: zunavi_voicer
     image: "voicevox/voicevox_engine:cpu-ubuntu20.04-latest"
@@ -26,7 +42,7 @@ services:
       - "${VOICER_PORT}:50021"
   pubsub:
     container_name: zunavi_pubsub
-    image: "redis:6.2.5-alpine"
+    image: "redis:7.2.1-bookworm"
     ports:
       - "${PUBSUB_PORT}:6379"
     volumes:

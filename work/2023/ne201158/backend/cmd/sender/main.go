@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/funobu/zunavi/internal/domains"
 	"github.com/funobu/zunavi/internal/handlers"
+	"github.com/funobu/zunavi/internal/infrastructures"
 	"github.com/funobu/zunavi/internal/usecases"
 	"github.com/labstack/echo/v4"
 	"github.com/redis/go-redis/v9"
@@ -31,9 +32,12 @@ func startMessageSender(ctx context.Context) error {
 		DB:       0,
 	})
 
-	messageSender := usecases.NewMessageSender(nil, pubsub, messageClients)
-	go messageSender.SendReceivedMessageWorker(ctx, "test")
+	voiceService := infrastructures.NewVoicevoxVoiceService(os.Getenv("VOICER_ADDR"))
+	aiChatService := infrastructures.NewOpenAIChatService(os.Getenv("OPENAI_API_KEY"))
+	messageSender := usecases.NewMessageSender(voiceService, aiChatService, pubsub, messageClients)
+	go messageSender.SendReceivedMessageWorker(ctx, "zundamon_chat")
 
+	// a
 	e := echo.New()
 	sendHandler := handlers.NewSendHandler(messageClients)
 	e.GET("/zunavi/:id", sendHandler.SubscribeZunavi)

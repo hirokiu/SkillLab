@@ -1,7 +1,10 @@
 package output
 
-import "context"
+import (
+	"context"
+	"github.com/funobu/zunavi/internal/domains"
+)
 
 type ToReceiver interface {
-	SendMessage(ctx context.Context, message string) error
+	SendMessage(ctx context.Context, message *domains.Message) error
 }
