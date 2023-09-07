@@ -47,6 +47,7 @@ func (s *messageSender) SendReceivedMessageWorker(ctx context.Context, subID str
 			continue
 		}
 		logz.Debugf(ctx, "openai response: %v", resp)
+		newMessage.Text = resp
 
 		voice, err := s.voiceService.GenerateVoice(ctx, 1, resp)
 		if err != nil {

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/funobu/zunavi/internal/domains"
+	"github.com/glassonion1/logz"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/net/websocket"
 	"log"
@@ -29,6 +30,7 @@ func (h *SendHandler) SubscribeZunavi(c echo.Context) error {
 			h.clients[connID] = domains.NewMessageManager(conn)
 			for {
 				message := <-h.clients[c.Param("id")].Messages
+				logz.Debugf(c.Request().Context(), "send message: %v", message.ID)
 				if err := websocket.JSON.Send(h.clients[connID].Connection, message); err != nil {
 					log.Println(err)
 				}
