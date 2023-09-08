@@ -4,7 +4,7 @@ import os
 from playsound import playsound
 
 
-directory = '/Users/prantikbarua/SkillLab/Logdata/SkillLab/'
+directory = '/Users/prantikbarua/SkillLab/work/2023/ne201059/Logdata/SkillLab/'
 file_pattern = '*.mat'
 
 # ディレクトリ内の一致するファイルのリストを取得
@@ -50,27 +50,6 @@ for _data in mat['None']:
     # print("y : " + str(_data[1]), end = '\t')
     # print("z : " + str(_data[2]))
 
+#動画を再生する
 playsound("arupakaraspi.mp3")
 
-#動画を再生する
-# cap = cv2.VideoCapture('/Users/prantikbarua/SkillLab/work/2023/ne201059/arupakaraspi.mp3')
-
-# if (cap.isOpened()== False):  
-#   print("ビデオファイルを開くとエラーが発生しました") 
-
-# while(cap.isOpened()):
-
-#     ret, frame = cap.read()
-#     if ret == True:
-
-#         cv2.imshow("Video", frame)
-        
-#         if cv2.waitKey(25) & 0xFF == ord('q'): 
-#             break
-    
-#     else:
-#         break
-
-# cap.release()
-
-# cv2.destroyAllWindows()
