@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  sender:
+    container_name: zunavi_sender
+    build:
+      context: .
+      dockerfile: ./backend/cmd/sender/Dockerfile
+      target: local
+    environment:
+      SENDER_API_PORT: ${SENDER_API_PORT}
+      STAGE: ${STAGE}
+      PUBSUB_ADDR: ${PUBSUB_ADDR}
+      VOICER_ADDR: ${VOICER_ADDR}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    volumes:
+      - ./backend:/backend
+    restart: always
+    tty: true
+    ports:
+      - "${SENDER_API_PORT}:${SENDER_API_PORT}"
+  receiver:
+    container_name: zunavi_receiver
+    build:
+      context: .
+      dockerfile: ./backend/cmd/receiver/Dockerfile
+      target: local
+    environment:
+      RECEIVER_API_PORT: ${RECEIVER_API_PORT}
+      STAGE: ${STAGE}
+      PUBSUB_ADDR: ${PUBSUB_ADDR}
+      GOOGLE_MAP_API_KEY: ${GOOGLE_MAP_API_KEY}
+    volumes:
+      - ./backend:/backend
+    restart: always
+    tty: true
+    ports:
+      - "${RECEIVER_API_PORT}:${RECEIVER_API_PORT}"
+  voicer:
+    container_name: zunavi_voicer
+    image: "voicevox/voicevox_engine:cpu-ubuntu20.04-latest"
+    ports:
+      - "${VOICER_PORT}:50021"
+  pubsub:
+    container_name: zunavi_pubsub
+    image: "redis:7.2.1-bookworm"
+    ports:
+      - "${PUBSUB_PORT}:6379"
+    volumes:
+      - "./data/redis:/data"
