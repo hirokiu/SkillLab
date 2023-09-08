@@ -77,5 +77,5 @@ post_data = {'field1': cpu_temp}
 if float(cpu_temp) > 44.5:
     post2ThingSpeak(ts_update_url, headers, post_data)
 
-    print("CPU温度が" + cpu_temp + "に達しました。作業環境が暑すぎませんか？")
+    print("CPU温度が44.5を超えました。作業環境が暑すぎませんか？")
 sys.exit(0)
