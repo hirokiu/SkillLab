@@ -36,6 +36,6 @@ def get_audio_volume_transitions(m4a_file, interval=1):
         pass
 
 if __name__ == "__main__":
-    m4a_file = "sensorlog_20230906_160346.m4a"  # 分析したいM4Aファイルへのパスを指定してください
+    m4a_file = "sensorlog_20230908.m4a"  # 分析したいM4Aファイルへのパスを指定してください
     interval = 1  # サンプリング間隔（秒）を設定します
     get_audio_volume_transitions(m4a_file, interval)
