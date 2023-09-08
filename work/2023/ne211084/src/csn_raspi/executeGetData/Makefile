@@ -1,0 +1,56 @@
+UNAME         =  $(shell uname)
+MACHINE       = $(shell uname -m)
+
+ifeq ($(UNAME),Darwin)
+    CC     = c++
+    LINKER = c++
+    OS     = i686-apple-darwin
+    THREAD = 
+    THREAD_LIB =
+    STATIC =
+    OS_ENV = mac
+else
+    CC     = g++
+    LINKER = g++
+    THREAD = -pthread
+    THREAD_LIB = -Wl,-Bdynamic,-lpthread
+    ifeq ($(UNAME),Linux)
+        OS_ENV = linux
+        ifeq ($(MACHINE),x86_64)
+            OS=x86_64-unknown-linux-gnu
+        else
+            OS=i686-pc-linux-gnu
+        endif
+    else
+         OS=windows_intelx86
+    endif
+endif
+
+BINARY   = smsExecute
+CCFLAGS  = -g -O0 $(THREAD)
+LDFLAGS  = 
+INCLUDES = -I/usr/include/mysql/
+LIBS = -L/usr/lib/mysql/ -lmysqlclient
+
+RM            = rm -f
+OBJEXT        = o
+
+# Monitor Object files
+OBJS =   \
+         csensor.$(OBJEXT)            \
+         csensor_$(OS_ENV)_usb_onavi.$(OBJEXT)             \
+         main.$(OBJEXT)  
+
+all       : Makefile $(BINARY)
+$(BINARY) : $(OBJS)
+	$(LINKER) $(OBJS) $(LDFLAGS) -o $(OUT_PATH)$(BINARY) $(LIBS)
+csensor.$(OBJEXT) :
+	$(CC) $(CCFLAGS) $(INCLUDES) -c csensor.cpp
+csensor_$(OS_ENV)_usb_onavi.$(OBJEXT) :
+	$(CC) $(CCFLAGS) $(INCLUDES) -c csensor_$(OS_ENV)_usb_onavi.cpp
+main.$(OBJEXT):
+	$(CC) $(CCFLAGS) $(INCLUDES) -c main.cpp
+clean   :
+	$(RM) $(OBJS).$(OBJEXT) $(BINARY) core a.out  
+
+      
