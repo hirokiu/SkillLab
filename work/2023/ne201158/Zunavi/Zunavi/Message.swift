@@ -10,7 +10,6 @@ import Foundation
 struct Message: Codable {
     let id: String
     let text: String
-    let file: Data
 }
 
 enum MessageDecodingError: Error {

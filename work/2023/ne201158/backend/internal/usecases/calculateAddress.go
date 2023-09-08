@@ -17,12 +17,12 @@ type CalculateAddress interface {
 
 type calculateAddress struct {
 	mapService     access.MapService
-	currentAddress string
+	currentAddress *string
 	geoDataList    []*domains.GeoData
 	mutex          sync.Mutex
 }
 
-func NewCalculateAddress(mapService access.MapService, currentAddress string, geoDataList []*domains.GeoData) CalculateAddress {
+func NewCalculateAddress(mapService access.MapService, currentAddress *string, geoDataList []*domains.GeoData) CalculateAddress {
 	return &calculateAddress{mapService: mapService, currentAddress: currentAddress, geoDataList: geoDataList, mutex: sync.Mutex{}}
 }
 
@@ -47,8 +47,9 @@ func (c *calculateAddress) CalculateAddressWorker(ctx context.Context) {
 				continue
 			}
 
+			logz.Debugf(ctx, "next address: %v", address)
 			c.mutex.Lock()
-			c.currentAddress = address
+			c.currentAddress = &address
 			c.mutex.Unlock()
 		}
 	}

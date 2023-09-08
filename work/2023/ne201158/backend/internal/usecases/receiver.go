@@ -12,17 +12,22 @@ type MessageReceiver interface {
 }
 
 type messageReceiver struct {
-	toReceiver output.ToReceiver
+	toReceiver     output.ToReceiver
+	currentAddress *string
 }
 
-func NewMessageReceiver(toReceiver output.ToReceiver) MessageReceiver {
-	return &messageReceiver{toReceiver: toReceiver}
+func NewMessageReceiver(toReceiver output.ToReceiver, currentAddress *string) MessageReceiver {
+	return &messageReceiver{toReceiver: toReceiver, currentAddress: currentAddress}
 }
 
 func (s messageReceiver) ReceiveMessage(ctx context.Context, text string) error {
 	newMessage := &domains.Message{
 		ID:   ulid.Make().String(),
 		Text: text,
+	}
+
+	if s.currentAddress != nil && *s.currentAddress != "" {
+		newMessage.Address = *s.currentAddress
 	}
 
 	// TODO: PubSubへの送信失敗時のハンドリング

@@ -27,13 +27,13 @@ func main() {
 func startMessageSender(ctx context.Context) error {
 	// TODO: ユーザごとにデータを分ける
 	// Shared data
-	var currentAddress string
+	var currentAddress *string
 	geoDataList := make([]*domains.GeoData, 0)
 
 	// Dependency Injection
 	mapService := infrastructures.NewGoogleMapService(ctx, os.Getenv("GOOGLE_MAP_API_KEY"))
 	messagePublishToSender := infrastructures.NewRedisMessagePublisher(os.Getenv("PUBSUB_ADDR"))
-	messageReceiver := usecases.NewMessageReceiver(messagePublishToSender)
+	messageReceiver := usecases.NewMessageReceiver(messagePublishToSender, currentAddress)
 	calculateAddress := usecases.NewCalculateAddress(mapService, currentAddress, geoDataList)
 
 	go calculateAddress.CalculateAddressWorker(ctx)
@@ -44,7 +44,7 @@ func startMessageSender(ctx context.Context) error {
 		AllowMethods: []string{http.MethodGet, http.MethodPost},
 	}))
 
-	sendHandler := handlers.NewReceiveHandler(messageReceiver)
+	sendHandler := handlers.NewReceiveHandler(messageReceiver, calculateAddress)
 	e.POST("/message", sendHandler.ReceiveMessage)
 	e.POST("/geo", sendHandler.ReceiveLatLng)
 	if err := e.Start(":" + os.Getenv("RECEIVER_API_PORT")); err != nil {

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"github.com/funobu/zunavi/internal/usecases"
 	"github.com/glassonion1/logz"
 	"github.com/labstack/echo/v4"
@@ -13,8 +14,8 @@ type ReceiveHandler struct {
 	calAddressService usecases.CalculateAddress
 }
 
-func NewReceiveHandler(receiver usecases.MessageReceiver) *ReceiveHandler {
-	return &ReceiveHandler{receiver: receiver}
+func NewReceiveHandler(receiver usecases.MessageReceiver, calAddressService usecases.CalculateAddress) *ReceiveHandler {
+	return &ReceiveHandler{receiver: receiver, calAddressService: calAddressService}
 }
 
 func (h *ReceiveHandler) ReceiveMessage(c echo.Context) error {
@@ -48,7 +49,7 @@ func (h *ReceiveHandler) ReceiveLatLng(c echo.Context) error {
 		logz.Warningf(c.Request().Context(), "failed to parse longitude: %v", err)
 		return c.String(400, "Bad Request")
 	}
-	h.calAddressService.SetCurrentLatLng(c.Request().Context(), latitude, longitude)
+	h.calAddressService.SetCurrentLatLng(context.Background(), latitude, longitude)
 
 	return c.String(201, "Successfully send message!")
 }

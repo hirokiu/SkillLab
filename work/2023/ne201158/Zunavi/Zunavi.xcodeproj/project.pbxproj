@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8C1853102AAAC2CF00254CFE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C18530F2AAAC2CF00254CFE /* LocationManager.swift */; };
 		8C6823812AAA74CF001CBEA8 /* CommunicateZunUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6823802AAA74CF001CBEA8 /* CommunicateZunUsecase.swift */; };
 		8C6823832AAA7931001CBEA8 /* ZunMessageObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6823822AAA7931001CBEA8 /* ZunMessageObserver.swift */; };
 		8C6823852AAA7F13001CBEA8 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6823842AAA7F13001CBEA8 /* Message.swift */; };
@@ -39,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8C18530F2AAAC2CF00254CFE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		8C1853112AAAC38500254CFE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8C6823802AAA74CF001CBEA8 /* CommunicateZunUsecase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunicateZunUsecase.swift; sourceTree = "<group>"; };
 		8C6823822AAA7931001CBEA8 /* ZunMessageObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZunMessageObserver.swift; sourceTree = "<group>"; };
 		8C6823842AAA7F13001CBEA8 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
@@ -104,6 +107,7 @@
 		8C69966A2AA9F95B00873F26 /* Zunavi */ = {
 			isa = PBXGroup;
 			children = (
+				8C1853112AAAC38500254CFE /* Info.plist */,
 				8C69966B2AA9F95B00873F26 /* ZunaviApp.swift */,
 				8C69966D2AA9F95B00873F26 /* ContentView.swift */,
 				8C69966F2AA9F95C00873F26 /* Assets.xcassets */,
@@ -113,6 +117,7 @@
 				8C6823802AAA74CF001CBEA8 /* CommunicateZunUsecase.swift */,
 				8C6823822AAA7931001CBEA8 /* ZunMessageObserver.swift */,
 				8C6823842AAA7F13001CBEA8 /* Message.swift */,
+				8C18530F2AAAC2CF00254CFE /* LocationManager.swift */,
 			);
 			path = Zunavi;
 			sourceTree = "<group>";
@@ -276,6 +281,7 @@
 				8C6823832AAA7931001CBEA8 /* ZunMessageObserver.swift in Sources */,
 				8C6996752AA9F95C00873F26 /* Persistence.swift in Sources */,
 				8C69966E2AA9F95B00873F26 /* ContentView.swift in Sources */,
+				8C1853102AAAC2CF00254CFE /* LocationManager.swift in Sources */,
 				8C6823812AAA74CF001CBEA8 /* CommunicateZunUsecase.swift in Sources */,
 				8C69966C2AA9F95B00873F26 /* ZunaviApp.swift in Sources */,
 				8C6823852AAA7F13001CBEA8 /* Message.swift in Sources */,
@@ -440,6 +446,8 @@
 				DEVELOPMENT_TEAM = 952FM6RL8A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Zunavi/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "最適なレコメンドを提供するために位置情報を利用します。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -469,6 +477,8 @@
 				DEVELOPMENT_TEAM = 952FM6RL8A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Zunavi/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "最適なレコメンドを提供するために位置情報を利用します。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

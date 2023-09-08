@@ -11,11 +11,13 @@ import SwiftUI
 struct ZunaviApp: App {
     let persistenceController = PersistenceController.shared
     @StateObject private var messageObserver = ZunMessageObserver()
+    @StateObject private var locationManger = LocationManager()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(messageObserver)
+                .environmentObject(locationManger)
         }
     }
 }

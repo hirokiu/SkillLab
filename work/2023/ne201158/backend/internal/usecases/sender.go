@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/funobu/zunavi/internal/domains"
 	"github.com/funobu/zunavi/internal/interfaces/access"
 	"github.com/glassonion1/logz"
@@ -41,6 +42,10 @@ func (s *messageSender) SendReceivedMessageWorker(ctx context.Context, subID str
 		}
 		logz.Debugf(ctx, "received message: %v", newMessage.Text)
 
+		if newMessage.Address != "" {
+			newMessage.Text = fmt.Sprintf("%s 次の目的地は%vです。目的地に基づいて何か提案してください。", newMessage.Address)
+		}
+
 		resp, err := s.aiChatService.Ask(ctx, newMessage.Text)
 		if err != nil {
 			log.Println(err)
@@ -48,14 +53,6 @@ func (s *messageSender) SendReceivedMessageWorker(ctx context.Context, subID str
 		}
 		logz.Debugf(ctx, "openai response: %v", resp)
 		newMessage.Text = resp
-
-		voice, err := s.voiceService.GenerateVoice(ctx, 1, resp)
-		if err != nil {
-			log.Println(err)
-			continue
-		}
-
-		newMessage.File = voice
 
 		for _, client := range s.clients {
 			s.mutex.Lock()

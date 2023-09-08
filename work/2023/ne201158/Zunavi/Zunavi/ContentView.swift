@@ -10,6 +10,7 @@ import CoreData
 
 struct ContentView: View {
     @EnvironmentObject var messageObserver: ZunMessageObserver
+    @EnvironmentObject var locationManager: LocationManager
 
     var body: some View {
         NavigationView {
@@ -23,6 +24,7 @@ struct ContentView: View {
         }
         .onAppear {
             messageObserver.connect()
+            locationManager.startSendingLocation()
         }
     }
 

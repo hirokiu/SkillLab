@@ -29,6 +29,7 @@ services:
       RECEIVER_API_PORT: ${RECEIVER_API_PORT}
       STAGE: ${STAGE}
       PUBSUB_ADDR: ${PUBSUB_ADDR}
+      GOOGLE_MAP_API_KEY: ${GOOGLE_MAP_API_KEY}
     volumes:
       - ./backend:/backend
     restart: always
