@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/funobu/zunavi/internal/domains"
 	"github.com/funobu/zunavi/internal/handlers"
 	"github.com/funobu/zunavi/internal/infrastructures"
 	"github.com/funobu/zunavi/internal/usecases"
@@ -24,9 +25,18 @@ func main() {
 }
 
 func startMessageSender(ctx context.Context) error {
-	// Dependency InjectionS
+	// TODO: ユーザごとにデータを分ける
+	// Shared data
+	var currentAddress string
+	geoDataList := make([]*domains.GeoData, 0)
+
+	// Dependency Injection
+	mapService := infrastructures.NewGoogleMapService(ctx, os.Getenv("GOOGLE_MAP_API_KEY"))
 	messagePublishToSender := infrastructures.NewRedisMessagePublisher(os.Getenv("PUBSUB_ADDR"))
 	messageReceiver := usecases.NewMessageReceiver(messagePublishToSender)
+	calculateAddress := usecases.NewCalculateAddress(mapService, currentAddress, geoDataList)
+
+	go calculateAddress.CalculateAddressWorker(ctx)
 
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -36,6 +46,7 @@ func startMessageSender(ctx context.Context) error {
 
 	sendHandler := handlers.NewReceiveHandler(messageReceiver)
 	e.POST("/message", sendHandler.ReceiveMessage)
+	e.POST("/geo", sendHandler.ReceiveLatLng)
 	if err := e.Start(":" + os.Getenv("RECEIVER_API_PORT")); err != nil {
 		return err
 	}

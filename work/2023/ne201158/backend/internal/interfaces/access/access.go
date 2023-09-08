@@ -9,3 +9,7 @@ type AIChatService interface {
 type VoiceService interface {
 	GenerateVoice(ctx context.Context, characterID int, text string) ([]byte, error)
 }
+
+type MapService interface {
+	GetAddressFromLatLng(ctx context.Context, lat, lng float64) (string, error)
+}
