@@ -1,0 +1,56 @@
+UNAME         =  $(shell uname)
+MACHINE       = $(shell uname -m)
+
+ifeq ($(UNAME),Darwin)
+    CC     = c++
+    LINKER = c++
+    OS     = i686-apple-darwin
+    THREAD =
+    THREAD_LIB =
+    STATIC =
+    OS_ENV = mac
+else
+    CC     = g++
+    LINKER = g++
+    THREAD = -pthread
+    THREAD_LIB = -Wl,-Bdynamic,-lpthread
+    ifeq ($(UNAME),Linux)
+        OS_ENV = linux
+        ifeq ($(MACHINE),x86_64)
+            OS=x86_64-unknown-linux-gnu
+        else
+            OS=i686-pc-linux-gnu
+        endif
+    else
+         OS=windows_intelx86
+    endif
+endif
+
+BINARY   = smsExecute
+CCFLAGS  = -g -O0 $(THREAD)
+LDFLAGS  =
+INCLUDES_PHIDGETS = -I/usr/include/
+LIBS_PHIDGETS = -lphidget22
+INCLUDES =
+LIBS =
+
+RM            = rm -f
+OBJEXT        = o
+
+# Monitor Object files
+OBJS =   \
+         csensor.$(OBJEXT)            \
+         csensor_usb_phidgets.$(OBJEXT)             \
+         main.$(OBJEXT)
+
+all       : Makefile $(BINARY)
+$(BINARY) : $(OBJS)
+	$(LINKER) $(OBJS) $(LDFLAGS) -o $(OUT_PATH)$(BINARY) $(LIBS) $(LIBS_PHIDGETS)
+csensor.$(OBJEXT) :
+	$(CC) $(CCFLAGS) $(LDFLAGS) $(INCLUDES) -c csensor.cpp
+csensor_usb_phidgets.$(OBJEXT) :
+	$(CC) $(CCFLAGS) $(LDFLAGS) $(INCLUDES) -c csensor_usb_phidgets.cpp
+main.$(OBJEXT):
+	$(CC) $(CCFLAGS) $(LDFLAGS) $(INCLUDES) -c main.cpp
+clean   :
+	$(RM) $(OBJS).$(OBJEXT) $(BINARY) core a.out

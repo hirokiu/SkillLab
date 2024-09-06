@@ -1,0 +1,12 @@
+/home/pi/csn_raspi/data/csn.log
+{
+    rotate 8760
+    hourly
+    compress
+    size 1M
+    missingok
+    notifempty
+    copytruncate
+    dateext
+    dateformat _%Y%m%d-%H%M-%s
+}
