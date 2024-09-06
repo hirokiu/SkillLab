@@ -1,0 +1,33 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Google Maps with Latest Altitude</title>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBvkPF6EEmP43PjI5pyTaL2y2wQ-kC6Ccg"></script>
+        <script>
+            function initMap() {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 15,
+                    center: {lat: 35.608806596170744, lng: 139.55499717047397}
+                });
+
+                var marker = new google.maps.Marker({
+                    position: {lat: 35.608806596170744, lng: 139.55499717047397},
+                    map: map
+                });
+
+                var infoWindow = new google.maps.InfoWindow({
+                    content: 'Altitude: 92.66737365722656 meters'
+                });
+
+                marker.addListener('click', function() {
+                    infoWindow.open(map, marker);
+                });
+            }
+        </script>
+    </head>
+    <body onload="initMap()">
+        <div id="map" style="height: 500px; width: 100%;"></div>
+    </body>
+    </html>
+    

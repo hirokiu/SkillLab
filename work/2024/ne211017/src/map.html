@@ -1,0 +1,48 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Google Maps with Path</title>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBvkPF6EEmP43PjI5pyTaL2y2wQ-kC6Ccg"></script>
+        <script>
+            function initMap() {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 15,
+                    center: {lat: 35.608806596170744, lng: 139.55499717047397}  <!-- 最新の位置でマップの中心を設定 -->
+                });
+
+                var pathCoordinates = [
+                    {lat: 35.608668216451456, lng: 139.55523088471352}, {lat: 35.608630579957236, lng: 139.5552531008394}, {lat: 35.608623173265535, lng: 139.5552574669341}, {lat: 35.60863307919351, lng: 139.55525161664707}, {lat: 35.608635148541396, lng: 139.55525039433365}, {lat: 35.60863725022347, lng: 139.55524915378336}, {lat: 35.60889101565811, lng: 139.555099319846}, {lat: 35.6090538580244, lng: 139.5550031705946}, {lat: 35.60902787841447, lng: 139.55493154017213}, {lat: 35.60888660143652, lng: 139.555031620096}, {lat: 35.60878937135973, lng: 139.55502642331604}, {lat: 35.608806596170744, lng: 139.55499717047397}, {lat: 35.608668216451456, lng: 139.55523088471352}, {lat: 35.608630579957236, lng: 139.5552531008394}, {lat: 35.608623173265535, lng: 139.5552574669341}, {lat: 35.60863307919351, lng: 139.55525161664707}, {lat: 35.608635148541396, lng: 139.55525039433365}, {lat: 35.60863725022347, lng: 139.55524915378336}, {lat: 35.60889101565811, lng: 139.555099319846}, {lat: 35.6090538580244, lng: 139.5550031705946}, {lat: 35.60902787841447, lng: 139.55493154017213}, {lat: 35.60888660143652, lng: 139.555031620096}, {lat: 35.60878937135973, lng: 139.55502642331604}, {lat: 35.608806596170744, lng: 139.55499717047397}
+                ];
+
+                var path = new google.maps.Polyline({
+                    path: pathCoordinates,
+                    geodesic: true,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 2
+                });
+
+                path.setMap(map);
+
+                var marker = new google.maps.Marker({
+                    position: pathCoordinates[pathCoordinates.length - 1],
+                    map: map,
+                    title: 'Latest Position'
+                });
+
+                var infoWindow = new google.maps.InfoWindow({
+                    content: 'Altitude: 92.66737365722656 meters'
+                });
+
+                marker.addListener('click', function() {
+                    infoWindow.open(map, marker);
+                });
+            }
+        </script>
+    </head>
+    <body onload="initMap()">
+        <div id="map" style="height: 500px; width: 100%;"></div>
+    </body>
+    </html>
+    
