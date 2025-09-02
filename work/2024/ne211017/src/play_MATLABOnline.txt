@@ -1,0 +1,8 @@
+m = mobiledev; % create object
+t0 = datetime; % get date data
+m.Logging = 1; % Start data logging
+
+" ThingSpeakへのアップロード
+[lat, lon, t, speed, course, alt, horizacc] = poslog(m); % Position data
+thingSpeakWrite(2647524, [lat lon alt speed],'WriteKey','MG1F21HRHX4ZQ19L','Timestamp' ,t0+t/24/60/60);
+
