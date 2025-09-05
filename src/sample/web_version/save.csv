@@ -1,0 +1,25 @@
+import time
+import random
+
+# 保存先ファイル（SDカード上の任意のパス）
+filename = "/home/pi/data_log.csv"
+
+def get_sensor_data():
+    # センサーからデータを取得する処理をここに書く
+    # 今回はダミーとしてランダム値を返す
+    return random.uniform(20.0, 30.0)
+
+def main():
+    with open(filename, "a") as f:  # 追記モードで開く
+        while True:
+            data = get_sensor_data()
+            timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+            line = f"{timestamp},{data}\n"
+            f.write(line)
+            f.flush()  # バッファを即時書き込み（電源断対策）
+            print("Saved:", line.strip())
+            time.sleep(1)  # 1秒ごとに取得
+
+if __name__ == "__main__":
+    main()
+

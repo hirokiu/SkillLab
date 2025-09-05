@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>ITスキル実習サンプル</title>
+
+        <script type="text/javascript" src='./js/detect_os.js'></script>
+
+        <script type="text/javascript">
+            // OS判定用の変数
+            let os;
+
+            // XMLHttpRequest
+            const xhr = new XMLHttpRequest();
+            const api_key = 'HE0KEO2Z9WD7Z0MT';
+
+            // DOMの構築完了チェック用のイベントハンドラ
+            window.addEventListener("DOMContentLoaded", init);
+
+            // 初期化
+            function init() {
+                // 簡易的なOS判定
+                os = detectOSSimply();
+
+                // OSごとに処理
+                if (os == "iphone") {
+                    // Safariの場合、使用許可をユーザに押してもらう必要があり
+                    document.querySelector("#permit").addEventListener("click", permitDeviceMotionForSafari);
+                    document.querySelector("#permit").addEventListener("click", permitDeviceOrientationForSafari);
+
+                    window.addEventListener(
+                        "devicemotion",
+                        motionHandler,
+                        true
+                    );
+                    window.addEventListener(
+                        "deviceorientation",
+                        orientationHandler,
+                        true
+                    );
+                } else if (os == "android") {
+                    window.addEventListener(
+                        "devicemotion",
+                        motionHandler,
+                        true
+                    );
+                    window.addEventListener(
+                        "deviceorientationabsolute",
+                        orientationHandler,
+                        true
+                    );
+                } else{
+                    window.alert("スマートフォンからアクセスしてください");
+                }
+            }
+
+            // モーションセンサーから取得
+            function motionHandler(event) {
+
+                function Send_Data(){
+                  let x = event.accelerationIncludingGravity.x;
+                  let y = event.accelerationIncludingGravity.y;
+                  let z = event.accelerationIncludingGravity.z;
+
+                  document.querySelector("#motion_x").innerHTML = x;
+                  document.querySelector("#motion_y").innerHTML = y;
+                  document.querySelector("#motion_z").innerHTML = z;
+
+                  var get_url = "https://api.thingspeak.com/update?api_key=" + api_key + "&field1=" + x + "&field2=" + y + "&field3=" + z;
+                  xhr.open('GET', get_url);
+                  xhr.send();
+                }
+
+                document.querySelector("#send_data").addEventListener("click", (e) => {
+                    e.preventDefault();
+
+                    // GET
+                  let count = 0;
+                  const Count = () => {
+                    count++;
+                  };
+                  const IntervalId = setInterval(() =>{
+                    Count();
+                    Send_Data();
+                    if(count >= 20){
+                      clearInterval(IntervalId);
+                    }
+                  }, 15000);
+                });
+            }
+
+            // ジャイロスコープと地磁気をセンサーから取得
+            function orientationHandler(event) {
+                let absolute = event.absolute;
+                let alpha = event.alpha;
+                let beta = event.beta;
+                let gamma = event.gamma;
+
+                let degrees;
+                if(os == "iphone") {
+                    // webkitCompasssHeading値を採用
+                    degrees = event.webkitCompassHeading;
+
+                }else{
+                    // deviceorientationabsoluteイベントのalphaを補正
+                    degrees = compassHeading(alpha, beta, gamma);
+                }
+
+                let direction;
+                if (
+                    (degrees > 337.5 && degrees < 360) ||
+                    (degrees > 0 && degrees < 22.5)
+                ) {
+                    direction = "北";
+                } else if (degrees > 22.5 && degrees < 67.5) {
+                    direction = "北東";
+                } else if (degrees > 67.5 && degrees < 112.5) {
+                    direction = "東";
+                } else if (degrees > 112.5 && degrees < 157.5) {
+                    direction = "東南";
+                } else if (degrees > 157.5 && degrees < 202.5) {
+                    direction = "南";
+                } else if (degrees > 202.5 && degrees < 247.5) {
+                    direction = "南西";
+                } else if (degrees > 247.5 && degrees < 292.5) {
+                    direction = "西";
+                } else if (degrees > 292.5 && degrees < 337.5) {
+                    direction = "北西";
+                }
+
+                document.querySelector("#direction").innerHTML =
+                    direction + " : " + degrees;
+                document.querySelector("#absolute").innerHTML = absolute;
+                document.querySelector("#alpha").innerHTML = alpha;
+                document.querySelector("#beta").innerHTML = beta;
+                document.querySelector("#gamma").innerHTML = gamma;
+            }
+
+            // 端末の傾き補正（Android用）
+            // https://www.w3.org/TR/orientation-event/
+            function compassHeading(alpha, beta, gamma) {
+                var degtorad = Math.PI / 180; // Degree-to-Radian conversion
+
+                var _x = beta ? beta * degtorad : 0; // beta value
+                var _y = gamma ? gamma * degtorad : 0; // gamma value
+                var _z = alpha ? alpha * degtorad : 0; // alpha value
+
+                var cX = Math.cos(_x);
+                var cY = Math.cos(_y);
+                var cZ = Math.cos(_z);
+                var sX = Math.sin(_x);
+                var sY = Math.sin(_y);
+                var sZ = Math.sin(_z);
+
+                // Calculate Vx and Vy components
+                var Vx = -cZ * sY - sZ * sX * cY;
+                var Vy = -sZ * sY + cZ * sX * cY;
+
+                // Calculate compass heading
+                var compassHeading = Math.atan(Vx / Vy);
+
+                // Convert compass heading to use whole unit circle
+                if (Vy < 0) {
+                    compassHeading += Math.PI;
+                } else if (Vx < 0) {
+                    compassHeading += 2 * Math.PI;
+                }
+            }
+
+        </script>
+    </head>
+
+    <body>
+        <h1>スマートフォンのセンサーデータを取得</h1>
+        <h2>各種センサーの値を表示</h2>
+        <ul>
+            <li>【x】<span id="motion_x"></span></li>
+            <li>【y】<span id="motion_y"></span></li>
+            <li>【z】<span id="motion_z"></span></li>
+            <li>【方角】<span id="direction"></span></li>
+            <li>【absolute】<span id="absolute"></span></li>
+            <li>【alpha】<span id="alpha"></span></li>
+            <li>【beta】<span id="beta"></span></li>
+            <li>【gamma】<span id="gamma"></span></li>
+        </ul>
+        <h2>センサー使用の許可</h2>
+        <p>
+            iOSの場合、ユーザの許可が必要なため、下記ボタンをタップ
+        </p>
+            <input type="button" id="permit" value="SafariでDeviceOrientationを許可"/>
+        <h2>データの登録</h2>
+        <p>
+            ボタンをタップしたときの加速度データをThingSpeakに登録
+        </p>
+            <input type="button" id="send_data" value="ThingSpeakに加速度を登録"/>
+    </body>
+</html>

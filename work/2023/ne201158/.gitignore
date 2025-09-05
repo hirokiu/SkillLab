@@ -1,0 +1,4 @@
+backend/cmd/sender/tmp/
+backend/cmd/receiver/tmp/
+*.wav
+.env
