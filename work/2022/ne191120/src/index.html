@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script src="https://unpkg.com/vue@next"></script>
+    <title>ITskill_final</title>
+    <link rel="stylesheet" href="ex.css" />
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <h1>スマホで角度を測れます</h1>
+    <h2>各種センサーの値を表示</h2>
+    <ul>
+        <li>【alpha】<span id="alpha"></span></li>
+        <li>【beta】<span id="beta"></span></li>
+        <li>【gamma】<span id="gamma"></span></li>
+    </ul>
+    <br>
+    <button id="button1" type="button">角度を測り始める</button>
+    <button id="button2" type="button">ここまでの角度が知りたい</button>
+    <br>
+    <hr>
+    <div id="resultArea">
+    </div>
+</body>
+
+<footer>
+    <input type="button" id="permit" value="SafariでDeviceOrientationを許可" />
+</footer>
+
+</html>
